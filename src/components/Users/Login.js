@@ -19,9 +19,10 @@ import {Header} from '../Header.js';
 import {myStyle} from '../../styles.js';
 import {Notification} from '../Notification';
 
-//import {URL,IMGURL} from '../commons.js';
+import {URL,IMGURL} from '../commons.js';
 
-let URL='https://60fdsy8ai9.execute-api.us-east-1.amazonaws.com/dev/'
+//let URL='https://60fdsy8ai9.execute-api.us-east-1.amazonaws.com/dev/'
+
 
 const initialValues = {
   userName:"alihassaan",
@@ -58,12 +59,13 @@ export function Login(){
         });
 
         const responseData= await res.json();
-
+        console.log(responseData);
         if(responseData.status!="Fail"){
           let responseStr = JSON.parse(responseData.response)
           User.setName(responseStr.fullName);
           setLoginFlag(true);
         }else{
+         
           setNotify({isOpen:true,message:responseData.message,type:'error'});
         }
 

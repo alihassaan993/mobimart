@@ -54,7 +54,8 @@ export function ProductsList(){
   async function fetchProducts(categoryID){
     console.log("Fetching products");
     try{
-      const res = await fetch(URL+'webapi/product/'+categoryID);
+      //const res = await fetch(URL+'webapi/product/'+categoryID);
+      const res = await fetch(URL+'/product/'+categoryID);
       const responseData= await res.json();
       console.log(responseData);
       setData(responseData);
@@ -68,7 +69,8 @@ export function ProductsList(){
   async function fetchCategories(){
     console.log("Fetching categories");
     try{
-      const res = await fetch(URL+'webapi/category/1');
+      //const res = await fetch(URL+'webapi/category/1');
+      const res = await fetch(URL+'/product/1');
       const responseData= await res.json();
       console.log(responseData);
       setCategories(responseData);
