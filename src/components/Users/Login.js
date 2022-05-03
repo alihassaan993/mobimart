@@ -47,7 +47,6 @@ export function Login(){
           headers:
           {
             'Content-Type':'application/json',
-            'Access-Control-Allow-Origin': 'https://60fdsy8ai9.execute-api.us-east-1.amazonaws.com',
             "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
             "Access-Control-Allow-Methods": "POST, GET"
           },

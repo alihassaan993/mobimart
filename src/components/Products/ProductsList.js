@@ -39,7 +39,7 @@ export function ProductsList(){
       console.log("FETCHING Categories");
       fetchCategories();
     if(category!=0){
-      fetchProducts(category.categoryid);
+      fetchProducts(category.categoryID);
     }
 
   }, []);
@@ -47,7 +47,7 @@ export function ProductsList(){
   useEffect(() => {
     console.log("FETCHING PRODUCTS");
     if(category!=0){
-      fetchProducts(category.categoryid);
+      fetchProducts(category.categoryID);
     }
   }, [category]);
 
@@ -58,7 +58,7 @@ export function ProductsList(){
       const res = await fetch(URL+'/product/'+categoryID);
       const responseData= await res.json();
       console.log(responseData);
-      setData(responseData);
+      setData(JSON.parse(responseData.response));
     }catch(exception){
       console.log(exception);
       alert("Unable to communicate to server. Please check your internet connection!!!");
@@ -70,10 +70,10 @@ export function ProductsList(){
     console.log("Fetching categories");
     try{
       //const res = await fetch(URL+'webapi/category/1');
-      const res = await fetch(URL+'/product/1');
+      const res = await fetch(URL+'/categories/1');
       const responseData= await res.json();
-      console.log(responseData);
-      setCategories(responseData);
+      console.log(responseData.status);
+      setCategories(JSON.parse(responseData.response));
       //this.arrayholder = responseData;
     }catch(exception){
       console.log(exception);
@@ -98,10 +98,10 @@ export function ProductsList(){
               onChange={handleChange}
             >
               {categories.map((category,index)=>(
-                  <ToggleButton value={category.categoryid}>
+                  <ToggleButton value={category.categoryID}>
                     <Category
-                      imageURL={IMGURL+category.imageurl}
-                      categoryName={category.categoryname}
+                      imageURL={IMGURL+category.imageURL}
+                      categoryName={category.categoryName}
                       category={category}
                       setID={setCategory}
                     >
@@ -120,7 +120,7 @@ export function ProductsList(){
     <div>&nbsp;
     <Paper>
       <Typography variant="h6">
-        &nbsp;{category.categoryname}
+        &nbsp;{category.categoryName}
       </Typography>
     </Paper>
     </div>
@@ -131,8 +131,8 @@ export function ProductsList(){
       {data.map((product,index)=>(
         <Grid item xs={4} sm={4} md={2} key={index}>
         <item>
-          <Product imageURL={IMGURL  + product.imageurl} title={product.productname}
-            subTitle= {"Unit Price: " + product.unitprice + "/" + product.productunit}
+          <Product imageURL={IMGURL  + product.imageURL} title={product.productName}
+            subTitle= {"Unit Price: " + product.unitPrice + "/" + product.productUnit}
             setOpen={setOpen}
             setProduct={setProduct}
             product={product}
