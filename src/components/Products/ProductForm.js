@@ -1,21 +1,24 @@
 import TextField from "@material-ui/core/TextField";
 import React, { useState,useEffect} from "react";
-import { InputAdornment,Button, Paper,Grid,makeStyles,Box ,DataGrid} from "@material-ui/core";
+import { InputAdornment,Button, Paper,Grid,makeStyles} from "@material-ui/core";
 import DnsIcon from '@mui/icons-material/Dns';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import DiscountIcon from '@mui/icons-material/Discount';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MenuItem from '@mui/material/MenuItem';
 
+import { Upload } from "@aws-sdk/lib-storage";
+import { S3Client } from "@aws-sdk/client-s3";
+
 import {URL,IMGURL} from '../commons.js';
 
 const initialValues = {
-  productname:'',
-  productdesc:'',
-  productunit:'',
-  productcode:'',
+  productName:'',
+  productDesc:'',
+  productUnit:'',
+  productCode:'',
   imageURL:'',
-  unitprice:'',
+  unitPrice:'',
   discount:''
 }
 
@@ -40,51 +43,86 @@ export function ProductForm(props){
   let {product,categoryID,refresh,setOpen}=props;
   const [values,setValues] = useState();
   const classes = useStyles();
-  let imageChangeFlag=false;
+  //let imageChangeFlag=false;
 
   const  handleSubmit = async() =>
     {
       try{
-        const requestOptions = {
-              method: 'POST',
-              headers: { 'Access-Control-Allow-Origin': '*' }
-          };
+  
 
-        let targetURL=URL+'webapi/product/';
+        let targetURL=URL+'/product/';
         const myFile = document.querySelector("input[type=file]").files[0];
+        
+        await upload(myFile);
+
         const data = new FormData();
-        data.append("productImage", myFile);
-        if(product!=""){
-          data.append("productID",product.productid);
+        //data.append("productImage", myFile);
+        if(product!==""){
+          data.append("productID",product.productID);
         }else{
           data.append("productID",0);
         }
 
 
 
-        data.append("productName", values.productname);data.append("categoryID", categoryID);
-        data.append("productCode", values.productcode);
+        data.append("productName", values.productName);data.append("categoryID", categoryID);
+        data.append("productCode", values.productCode);
 
-        data.append("imageURL", values.imageurl);
-        data.append("productUnit", values.productunit);data.append("discount", values.discount);
-        data.append("unitPrice", values.unitprice);data.append("productDesc", values.productdesc);
+        data.append("imageURL", myFile.name);
+        data.append("productUnit", values.productUnit);data.append("discount", values.discount);
+        data.append("unitPrice", values.unitPrice);data.append("productDesc", values.productDesc);
         data.append("storeID",1);
+
+        console.log("Data " + JSON.stringify(Object.fromEntries(data.entries())));
 
         const res = await fetch(targetURL, {
             method: 'POST',
-            body: data
+            headers:
+            {
+              'Content-Type':'application/json'
+            },
+            body: JSON.stringify(Object.fromEntries(data.entries()))
+
         });
         const responseData= await res;
 
         refresh(categoryID);
         setOpen(false);
-
+        
 
       }catch(exception){
         alert("Unable to save product at this time. Please try again later");
       }
 
     };
+
+ function upload(myFile){
+
+    
+      
+      const target = { Bucket:process.env.REACT_APP_BUCKET_NAME, Key:myFile.name, Body:myFile };
+      const creds = {accessKeyId:process.env.REACT_APP_ACCESS_ID,secretAccessKey: process.env.REACT_APP_ACCESS_KEY};
+      try {
+
+        const parallelUploads3 = new Upload({
+          client: new S3Client({region:process.env.REACT_APP_REGION,credentials:creds}),
+          leavePartsOnError: false, // optional manually handle dropped parts
+          params: target,
+        });
+    
+        parallelUploads3.on("httpUploadProgress", (progress) => {
+          console.log(progress);
+        });
+    
+        parallelUploads3.done();
+        console.log("File Uploaded Successfully " );
+
+        return IMGURL + myFile.name;
+
+      } catch (e) {
+        console.log(e);
+      }
+  }    
 
   const handleReset = () => {
     document.getElementById("productForm").reset();
@@ -101,7 +139,7 @@ export function ProductForm(props){
 
   const handleImageChange = e => {
     const {name,value} = e.target
-    imageChangeFlag=true;
+    //imageChangeFlag=true;
     setValues({
       ...values,
       [name]:value
@@ -126,7 +164,7 @@ export function ProductForm(props){
           variant="outlined"
           onChange={handleInputChange}
           name="productname"
-          defaultValue={product.productname}
+          defaultValue={product.productName}
           label={"Product Name"} //optional
           style={{width:'100%'}}
           inputProps={{
@@ -146,7 +184,7 @@ export function ProductForm(props){
           variant="outlined"
           onChange={handleInputChange}
           name="productdesc"
-          defaultValue={product.productdesc}
+          defaultValue={product.productDesc}
           label={"Product Description"} //optional
           style={{width:'100%'}}
           required
@@ -160,7 +198,7 @@ export function ProductForm(props){
           variant="outlined"
           onChange={handleInputChange}
           name="productcode"
-          defaultValue={product.productcode}
+          defaultValue={product.productCode}
           label={"Product Code"} //optional
           style={{width:'100%'}}
           inputProps={{
@@ -173,7 +211,7 @@ export function ProductForm(props){
           variant="outlined"
           onChange={handleInputChange}
           name="productunit"
-          defaultValue={product.productunit}
+          defaultValue={product.productUnit}
           label={"Product Unit"} //optional
           style={{width:'100%'}}
           required
@@ -193,7 +231,7 @@ export function ProductForm(props){
           variant="outlined"
           onChange={handleInputChange}
           name="unitprice"
-          defaultValue={product.unitprice}
+          defaultValue={product.unitPrice}
           label={"Unit Price"} //optional
           style={{width:'100%'}}
           InputProps={{
@@ -216,7 +254,7 @@ export function ProductForm(props){
           InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              {product!=""&&(
+              {product!==""&&(
                 <img src={IMGURL + product.imageurl} style={{height:50,width:50}}/>
               )}
               <CameraAltIcon/>

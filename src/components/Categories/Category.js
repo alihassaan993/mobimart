@@ -1,10 +1,10 @@
 import React,{useState} from 'react';
-import {Button,Box,Avatar,Typography} from '@material-ui/core'
+import {Box,Typography} from '@material-ui/core'
 
 export function Category(props){
 
   const {categoryName,imageURL,category,setID} = props;
-  let [bgColor,setBgColor]=useState("black");
+  let [bgColor]=useState("black");
 
   return(
     <Box
@@ -19,7 +19,7 @@ export function Category(props){
       color={bgColor}
       onClick={()=>{setID(category)}}
     >
-      <img src={imageURL} style={{width:50,height:'80%',marginRight:5,borderRadius:30}}/>
+      <img src={imageURL} alt='' style={{width:50,height:'80%',marginRight:5,borderRadius:30}}/>
       <Typography variant="normal">
         {categoryName}
       </Typography>

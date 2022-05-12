@@ -1,7 +1,7 @@
 import TextField from "@material-ui/core/TextField";
 import React, { useState,useEffect} from "react";
-import { FormControlLabel,Radio,RadioGroup,MenuItem,Button, Paper,Grid,makeStyles,Box ,DataGrid} from "@material-ui/core";
-import {URL,IMGURL} from '../commons.js';
+import { FormControlLabel,Radio,RadioGroup,MenuItem,Button, Paper,Grid,makeStyles} from "@material-ui/core";
+import {URL} from '../commons.js';
 import {ConfirmDialog} from '../ConfirmDialog';
 
 const initialValues = {
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme=>({
 export function UserForm(props){
 
   const [values,setValues] = useState();
-  const [editPassword,setEditPassword] = useState(false);
+  const [editPassword] = useState(false);
   const classes = useStyles();
   let {setOpen,fetchUsers,user,setNotify}=props;
   const [confirmDialog,setConfirmDialog]=useState({isOpen:false,title:'',subTitle:''});
@@ -72,7 +72,7 @@ export function UserForm(props){
 
       });
       const responseData= await res.json();
-      if(responseData.status!="Fail"){
+      if(responseData.status!=="Fail"){
         setNotify({isOpen:true,message:responseData.message,type:'success'})
         fetchUsers(1);
         setOpen(false);

@@ -1,7 +1,6 @@
-import React, { useState,useEffect} from "react";
+import React, { useState} from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -11,7 +10,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { FormControl } from '@mui/material';
 
 import {User} from './User.js';
 import {Products} from '../Products/Products.js';
@@ -19,7 +17,7 @@ import {Header} from '../Header.js';
 import {myStyle} from '../../styles.js';
 import {Notification} from '../Notification';
 
-import {URL,IMGURL} from '../commons.js';
+import {URL} from '../commons.js';
 
 //let URL='https://60fdsy8ai9.execute-api.us-east-1.amazonaws.com/dev/'
 
@@ -42,13 +40,11 @@ export function Login(){
       console.log("Fetching Users");
       try{
 
-        const res = await fetch(URL+"login/",{
+        const res = await fetch(URL+"/login/",{
           method:'POST',
           headers:
           {
-            'Content-Type':'application/json',
-            "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
-            "Access-Control-Allow-Methods": "POST, GET"
+            'Content-Type':'application/json'
           },
           body:JSON.stringify({
             userName:values.userName,
@@ -59,7 +55,7 @@ export function Login(){
 
         const responseData= await res.json();
         console.log(responseData);
-        if(responseData.status!="Fail"){
+        if(responseData.status!=="Fail"){
           let responseStr = JSON.parse(responseData.response)
           User.setName(responseStr.fullName);
           setLoginFlag(true);

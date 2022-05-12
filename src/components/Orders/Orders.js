@@ -1,8 +1,5 @@
-import React, { useState } from "react";
-import TextField from "@material-ui/core/TextField";
-
+import React from "react";
 import {PageHeader} from '../PageHeader.js';
-import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import {OrdersList} from './OrdersList.js';

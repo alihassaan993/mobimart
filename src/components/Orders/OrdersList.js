@@ -1,9 +1,9 @@
 import React,{useEffect,useState} from 'react';
-import {Container,Paper,Button,Modal,Box,Typography,Grid,TableContainer,Table,TableHead,TableRow,TableCell} from '@material-ui/core';
-import { DataGrid, GridColDef, GridValueGetterParams,GridToolbar,GridApi } from '@mui/x-data-grid';
+import {Typography} from '@material-ui/core';
+import { DataGrid, GridColDef} from '@mui/x-data-grid';
 import {ToggleButton,ToggleButtonGroup} from '@mui/material';
 import Moment from 'moment';
-import {URL,IMGURL} from '../commons.js';
+import {URL} from '../commons.js';
 import {Popup} from '../Popup';
 import {OrderDetails} from './OrderDetails';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -37,12 +37,12 @@ export function OrdersList() {
   //const [order,setOrder] = useState(Order);
   //const order=Order;
   const columns:GridColDef[]=[
-    {field:'orderid',headerName:'ID', flex: 1,headerClassName: 'super-app-theme--header',headerAlign:'center'},
-    {field:'orderno',headerName:'Order No', flex: 1,headerClassName: 'super-app-theme--header'},
-    {field:'fullname',headerName:'Customer Name', flex: 1,headerClassName: 'super-app-theme--header'},
+    {field:'orderID',headerName:'ID', flex: 1,headerClassName: 'super-app-theme--header'},
+    {field:'orderNo',headerName:'Order No', flex: 1,headerClassName: 'super-app-theme--header'},
+    {field:'fullName',headerName:'Customer Name', flex: 1,headerClassName: 'super-app-theme--header'},
     {field:'address',headerName:'Address', flex: 1,headerClassName: 'super-app-theme--header'},
-    {field:'phoneno',headerName:'Phone No.', flex: 1,headerClassName: 'super-app-theme--header'},
-    {field:'orderdate',headerName:'Order Date', flex: 1,
+    {field:'phoneNo',headerName:'Phone No.', flex: 1,headerClassName: 'super-app-theme--header'},
+    {field:'orderDate',headerName:'Order Date', flex: 1,
       renderCell:(params)=><Typography variant="normal">{Moment(params.value).format("DD MMM, yyyy")}</Typography>
     },
     {field:'status',headerName:'Status', flex: 1,headerClassName: 'super-app-theme--header',
@@ -69,11 +69,11 @@ export function OrdersList() {
 
 
       //const order = Order
-      lorder.orderid = Number(params.row.orderid);
-      lorder.orderdate = params.row.orderdate.toString();
-      lorder.orderno = params.row.orderno.toString();
+      lorder.orderID = Number(params.row.orderID);
+      lorder.orderDate = params.row.orderDate.toString();
+      lorder.orderNo = params.row.orderNo.toString();
       lorder.status = params.row.status.toString();
-      lorder.phoneno = params.row.phoneno.toString();
+      lorder.phoneNo = params.row.phoneNo.toString();
       lorder.address = params.row.address.toString();
 
       setOrder(lorder);
@@ -83,9 +83,9 @@ export function OrdersList() {
   async function fetchOrders(storeID,duration){
     console.log("Fetching orders");
     try{
-      const res = await fetch(URL+'webapi/order/bystoreid?storeID='+storeID+'&duration='+duration);
+      const res = await fetch(URL+'/order/bystoreid?storeID='+storeID+'&duration='+duration);
       const responseData= await res.json();
-      if(responseData.status!="Fail"){
+      if(responseData.status!=="Fail"){
         let responseStr=JSON.parse(responseData.response);
         setData(responseStr);
       }
@@ -123,7 +123,7 @@ export function OrdersList() {
           pageSize={20}
           autoHeight
           rowsPerPageOptions={[20]}
-          getRowId={(row) => row.orderid}
+          getRowId={(row) => row.orderID}
           onCellDoubleClick={currentlySelected}
          sx={{
            boxShadow: 2,

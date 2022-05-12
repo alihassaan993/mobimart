@@ -1,5 +1,5 @@
-import React, { Component,useState} from 'react';
-import {XYPlot, VerticalBarSeriesCanvas,VerticalBarSeries,LineSeries,VerticalGridLines,HorizontalGridLines,XAxis,YAxis} from 'react-vis';
+import React, { useState} from 'react';
+import {XYPlot, VerticalBarSeriesCanvas,VerticalBarSeries,VerticalGridLines,HorizontalGridLines,XAxis,YAxis} from 'react-vis';
 
 export function Home(){
 

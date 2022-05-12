@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import TextField from "@material-ui/core/TextField";
-import {CategoryForm} from './CategoryForm.js';
+import React from "react";
+
 import {CategoryTable} from './CategoryTable.js';
 import CategoryIcon from '@mui/icons-material/Category';
 import {PageHeader} from '../PageHeader.js';

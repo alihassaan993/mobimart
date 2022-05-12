@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams,GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import {useEffect,useState} from 'react';
-import {Paper,Button,Modal,Box,Typography} from '@material-ui/core';
+import {Paper,Button} from '@material-ui/core';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {CategoryForm} from './CategoryForm';
@@ -11,24 +11,13 @@ const columns:GridColDef[]=[
   {field:'categoryid',headerName:'ID',width:70},
   {field:'categoryname',headerName:'Category Name',width:150},
   {field:'imageurl',headerName:'Category Image', width:180,
-  renderCell:(params)=><img src={URL+"/images/" + params.value} width="50%" height="50%"/>
+  renderCell:(params)=><img src={URL+"/images/" + params.value} alt='' width="50%" height="50%"/>
 },{
   field:'',headerName:'',width:130,
   renderCell:(params)=><div><ModeEditIcon/><DeleteForeverIcon/></div>
 }
 ];
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 const URL="http://localhost:8080/MobiMart/";
 
@@ -37,7 +26,6 @@ export function CategoryTable(){
   const [rows,setRows] = useState();
   const [open,setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   function addButton ()
   {

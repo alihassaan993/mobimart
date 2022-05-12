@@ -1,35 +1,23 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams,GridToolbar,GridApi } from '@mui/x-data-grid';
+import { DataGrid, GridColDef} from '@mui/x-data-grid';
 import {useEffect,useState} from 'react';
-import {Paper,Button,Modal,Box,Typography} from '@material-ui/core';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import {Button} from '@material-ui/core';
+
 import {Notification} from '../Notification';
 
 import {Popup} from '../Popup.js';
 import {UserForm} from './UserForm';
-import {URL,IMGURL} from '../commons.js';
+import {URL} from '../commons.js';
 
 const columns:GridColDef[]=[
-  {field:'userid',headerName:'ID',flex:1},
-  {field:'fullname',headerName:'Full Name',flex:1},
-  {field:'username',headerName:'User Name',flex:1},
-  {field:'userrole',headerName:'Role',flex:1},
+  {field:'userID',headerName:'ID',flex:1},
+  {field:'fullName',headerName:'Full Name',flex:1},
+  {field:'userName',headerName:'User Name',flex:1},
+  {field:'userRole',headerName:'Role',flex:1},
   {field:'status',headerName:'Status',flex:1},
   {field:'password',headerName:'password',flex:1}
 ];
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 
 export function UserList(){
@@ -45,7 +33,6 @@ export function UserList(){
   const [rows,setRows] = useState([]);
   const [open,setOpen] = useState(false);
   const handleOpen = () => {setUser("");setOpen(true);}
-  const handleClose = () => setOpen(false);
   const [user,setUser]=useState();
   const [notify,setNotify]=useState({isOpen:false,message:'',type:''});
 
@@ -75,10 +62,10 @@ export function UserList(){
   async function fetchUsers(storeID){
     console.log("Fetching Users");
     try{
-      const res = await fetch(URL+'webapi/user/allusers/'+ storeID, requestOptions);
+      const res = await fetch(URL+'/allusers/'+ storeID, requestOptions);
       const responseData= await res.json();
       //console.log(responseData);
-      if(responseData.status!="Fail"){
+      if(responseData.status!=="Fail"){
         let responseStr=JSON.parse(responseData.response);
         setRows(responseStr);
       }else{
@@ -95,9 +82,9 @@ export function UserList(){
 
   function editUser(params: GridCellParams){
     luser.userid = Number(params.row.userid);
-    luser.username = params.row.username.toString();
-    luser.fullname = params.row.fullname.toString();
-    luser.userrole = params.row.userrole.toString();
+    luser.username = params.row.userName.toString();
+    luser.fullname = params.row.fullName.toString();
+    luser.userrole = params.row.userRole.toString();
     luser.status = params.row.status.toString();
     luser.password=params.row.password.toString();
 
@@ -119,7 +106,7 @@ export function UserList(){
          columns={columns}
          pageSize={5}
          rowsPerPageOptions={[5]}
-         getRowId={(row) => row.userid}
+         getRowId={(row) => row.userID}
          onCellClick={editUser}
          components={{
             Toolbar: addButton,

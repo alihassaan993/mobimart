@@ -1,16 +1,13 @@
 import React,{useState,useEffect} from 'react'
-import {Container,Paper,Typography,Grid,Button,Table,TableHead,TableRow,TableCell} from '@material-ui/core';
+import {Paper,Typography,Grid,Button} from '@material-ui/core';
 import Moment from 'moment';
-import {URL,IMGURL} from '../commons.js';
-import { DataGrid, GridColDef, GridValueGetterParams,GridToolbar,GridApi } from '@material-ui/data-grid';
+import {URL} from '../commons.js';
+import { DataGrid, GridColDef} from '@material-ui/data-grid';
 import CheckIcon from '@mui/icons-material/Check';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {ConfirmDialog} from '../ConfirmDialog';
 
-const initialValues={
-  orderno:'Initial Value',
-  orderdate:''
-}
+
 
 export function OrderDetails(props){
 
@@ -18,22 +15,22 @@ export function OrderDetails(props){
   const [confirmDialog,setConfirmDialog]=useState({isOpen:false,title:'',subTitle:''});
   const [data,setData]=useState([]);
   const columns:GridColDef[]=[
-    {field:'productname',headerName:'Product Name', flex: 1},
+    {field:'productName',headerName:'Product Name', flex: 1},
     {field:'quantity',headerName:'Quantity', flex: 1},
-    {field:'unitprice',headerName:'Unit Price', flex: 1}
+    {field:'unitPrice',headerName:'Unit Price', flex: 1}
   ]
 
   useEffect(() => {
     console.log("FETCHING ORDER DETAILS " + order.status);
-      fetchOrderDetails(order.orderid);
+      fetchOrderDetails(order.orderID);
   }, []);
 
   async function fetchOrderDetails(orderID){
     try{
-      const res = await fetch(URL+'webapi/order/'+orderID);
+      const res = await fetch(URL+'/order/'+orderID);
       const responseData= await res.json();
       console.log("Response " + responseData);
-      if(responseData.status!="Fail"){
+      if(responseData.status!=="Fail"){
         let responseStr=JSON.parse(responseData.response);
         setData(responseStr);
       }
@@ -48,16 +45,13 @@ export function OrderDetails(props){
   const  accept = async(status) =>
     {
       try{
-        const requestOptions = {
-              method: 'POST',
-              headers: { 'Access-Control-Allow-Origin': '*' }
-          };
 
-          const res = await fetch(URL+"webapi/order/accept?orderID="+order.orderid+"&status="+status, {
+
+          const res = await fetch(URL+"/order/accept?orderID="+order.orderID+"&status="+status, {
               method: 'POST'
           });
           const responseData= await res.json();
-          if(responseData.status!='Fail'){
+          if(responseData.status!=='Fail'){
             setNotify({isOpen:true,message:responseData.message,type:'success'});
             setOpen(false);
             fetchOrders(1);
@@ -78,13 +72,13 @@ export function OrderDetails(props){
           <Typography variant="normal">Order No.</Typography>
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="normal">{order.orderno}</Typography>
+          <Typography variant="normal">{order.orderNo}</Typography>
         </Grid>
         <Grid item xs={6}>
           <Typography variant="normal">Order Date</Typography>
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="normal">{Moment(order.orderdate).format("DD MMM, yyyy")}</Typography>
+          <Typography variant="normal">{Moment(order.orderDate).format("DD MMM, yyyy")}</Typography>
         </Grid>
         <Grid item xs={6}>
           <Typography variant="normal">Order Status</Typography>
@@ -104,7 +98,7 @@ export function OrderDetails(props){
               columns={columns}
               pageSize={10}
               rowsPerPageOptions={[5]}
-              getRowId={(row) => row.orderdetailid}
+              getRowId={(row) => row.orderDetailID}
               style={{height:250}}
             />
         </Grid>

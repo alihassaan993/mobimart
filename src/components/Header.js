@@ -5,24 +5,17 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import {InputBase,Grid,makeStyles,Badge} from '@material-ui/core';
+import {Grid,Badge} from '@material-ui/core';
 import {myStyle} from '../styles.js';
-import SearchIcon from '@mui/icons-material/Search';
 import {useState} from 'react';
-import {Categories} from './Categories/Categories.js'
 import {Products} from './Products/Products.js'
 import {Orders} from './Orders/Orders.js'
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 
 import Menu from '@mui/material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import FaceIcon from '@mui/icons-material/Face';
-
-import {User} from './Users/User';
 
 import {Users} from './Users/Users';
 
@@ -30,9 +23,9 @@ const settings = ['Logout'];
 
 export function Header(props) {
   const classes=myStyle();
-  const {menuItem,setMenuItem,setLoginFlag}=props;
+  const {setMenuItem,setLoginFlag}=props;
 
-  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {

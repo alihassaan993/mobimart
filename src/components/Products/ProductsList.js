@@ -1,23 +1,14 @@
 import React,{useEffect,useState} from 'react';
-import {Paper,Button,Modal,Box,Typography,Grid,TableContainer,Table,TableHead,TableRow,TableCell} from '@material-ui/core';
+import {Paper,Button,Typography,Grid,TableContainer,Table,TableHead,TableRow,TableCell} from '@material-ui/core';
 import AddIcon from '@mui/icons-material/Add';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from 'react-responsive-carousel';
 import {Category} from '../Categories/Category';
-
 import {ToggleButton,ToggleButtonGroup} from '@mui/material';
-
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-
 import {ProductForm} from './ProductForm';
-
 import {Product} from './Product.js';
 import {Popup} from '../Popup';
-
 import {URL,IMGURL} from '../commons.js';
-
-//const URL="http://localhost:8081/mobi-images/1/mobi-images/1/";
+import LoadingOverlay from 'react-loading-overlay-ts';
 
 export function ProductsList(){
 
@@ -26,7 +17,7 @@ export function ProductsList(){
   const [category,setCategory]=useState(0);
   const [product,setProduct]=useState();
   const [open,setOpen]=useState(false);
-  const [lastCategory,setLastCategory]=useState(0);
+  const [loading,setLoading]=useState(false);
 
   const [alignment, setAlignment] = React.useState(0);
   const handleChange = (
@@ -38,7 +29,7 @@ export function ProductsList(){
   useEffect(() => {
       console.log("FETCHING Categories");
       fetchCategories();
-    if(category!=0){
+    if(category!==0){
       fetchProducts(category.categoryID);
     }
 
@@ -46,7 +37,7 @@ export function ProductsList(){
 
   useEffect(() => {
     console.log("FETCHING PRODUCTS");
-    if(category!=0){
+    if(category!==0){
       fetchProducts(category.categoryID);
     }
   }, [category]);
@@ -55,8 +46,10 @@ export function ProductsList(){
     console.log("Fetching products");
     try{
       //const res = await fetch(URL+'webapi/product/'+categoryID);
+      setLoading(true);
       const res = await fetch(URL+'/product/'+categoryID);
       const responseData= await res.json();
+      setLoading(false);
       console.log(responseData);
       setData(JSON.parse(responseData.response));
     }catch(exception){
@@ -70,10 +63,12 @@ export function ProductsList(){
     console.log("Fetching categories");
     try{
       //const res = await fetch(URL+'webapi/category/1');
+      setLoading(true);
       const res = await fetch(URL+'/categories/1');
       const responseData= await res.json();
       console.log(responseData.status);
       setCategories(JSON.parse(responseData.response));
+      setLoading(false);
       //this.arrayholder = responseData;
     }catch(exception){
       console.log(exception);
@@ -123,15 +118,22 @@ export function ProductsList(){
         &nbsp;{category.categoryName}
       </Typography>
     </Paper>
-    </div>
-
+    </div>        
     <div>
+    <LoadingOverlay
+        active={loading}
+        spinner
+        text='Loading Products...'
+      >    
+      
     <Paper style={{marginTop:10,paddingLeft:10,paddingRight:10}} elevation={3}>
+
+      
     <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
       {data.map((product,index)=>(
         <Grid item xs={4} sm={4} md={2} key={index}>
         <item>
-          <Product imageURL={IMGURL  + product.imageURL} title={product.productName}
+          <Product imageURL={IMGURL  + product.imgURL} title={product.productName}
             subTitle= {"Unit Price: " + product.unitPrice + "/" + product.productUnit}
             setOpen={setOpen}
             setProduct={setProduct}
@@ -140,21 +142,25 @@ export function ProductsList(){
         </item>
         </Grid>
       ))}
-      <Grid item xs={2} sm={4} md={4}>
-        <item>
-        <Button variant="contained" color="primary"
-          style={{width:100, height:100,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-         onClick={()=>{setProduct("");setOpen(true)}}
-        >
-          <AddIcon />
-        </Button>
-        </item>
-      </Grid>
+      {category!=""&&
+        <Grid item xs={2} sm={4} md={4}>
+          <item>
+          <Button variant="contained" color="primary"
+            style={{width:100, height:100,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+          onClick={()=>{setProduct("");setOpen(true)}}
+          >
+            <AddIcon />
+          </Button>
+          </item>
+        </Grid>     
+      }
+ 
     </Grid>
     </Paper>
+    </LoadingOverlay>
     </div>
       <Popup
        openPopup={open}
@@ -162,7 +168,7 @@ export function ProductsList(){
        title="Product Form"
       >
        <ProductForm product={product}
-       categoryID={category.categoryid} refresh={fetchProducts}
+       categoryID={category.categoryID} refresh={fetchProducts}
        setOpen={setOpen}
        />
       </Popup>
