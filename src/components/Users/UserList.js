@@ -23,10 +23,10 @@ const columns:GridColDef[]=[
 export function UserList(){
 
   let luser={
-    userid:0,
-    username:"",
-    fullname:"",
-    userrole:"",
+    userID:0,
+    userName:"",
+    fullName:"",
+    userRole:"",
     status:""
   }
 
@@ -81,10 +81,10 @@ export function UserList(){
   }
 
   function editUser(params: GridCellParams){
-    luser.userid = Number(params.row.userid);
-    luser.username = params.row.userName.toString();
-    luser.fullname = params.row.fullName.toString();
-    luser.userrole = params.row.userRole.toString();
+    luser.userID = Number(params.row.userID);
+    luser.userName = params.row.userName.toString();
+    luser.fullName = params.row.fullName.toString();
+    luser.userRole = params.row.userRole.toString();
     luser.status = params.row.status.toString();
     luser.password=params.row.password.toString();
 

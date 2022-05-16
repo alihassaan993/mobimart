@@ -81,6 +81,9 @@ export function ProductsList(){
     <>
     <div>
     <Paper color="primary">
+    <Typography variant="h6">
+    &nbsp;Categories
+    </Typography>
     <TableContainer>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
@@ -127,13 +130,11 @@ export function ProductsList(){
       >    
       
     <Paper style={{marginTop:10,paddingLeft:10,paddingRight:10}} elevation={3}>
-
-      
     <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
       {data.map((product,index)=>(
         <Grid item xs={4} sm={4} md={2} key={index}>
         <item>
-          <Product imageURL={IMGURL  + product.imgURL} title={product.productName}
+          <Product imageURL={IMGURL  + product.imageurl} title={product.productName}
             subTitle= {"Unit Price: " + product.unitPrice + "/" + product.productUnit}
             setOpen={setOpen}
             setProduct={setProduct}

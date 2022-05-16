@@ -9,8 +9,8 @@ export function Products() {
   return (
     <div>
     <PageHeader
-      title="Inventory"
-      subTitle="All Products are listed here"
+      title="Product"
+      subTitle="Please select Category, Products of Category will than list"
       icon={<InventoryIcon />}
     />
     <ProductsList/>

@@ -10,6 +10,7 @@ import {myStyle} from '../styles.js';
 import {useState} from 'react';
 import {Products} from './Products/Products.js'
 import {Orders} from './Orders/Orders.js'
+import {Categories} from './Categories/Categories.js'
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 
 import Menu from '@mui/material/Menu';
@@ -49,7 +50,8 @@ export function Header(props) {
         <Toolbar>
           <Grid container>
            <Grid item>
-             <Button color="inherit" onClick={()=>{setMenuItem(<Products/>)}}>Inventory</Button>
+             <Button color="inherit" onClick={()=>{setMenuItem(<Categories/>)}}>Category</Button>
+             <Button color="inherit" onClick={()=>{setMenuItem(<Products/>)}}>Products</Button>
              <Button color="inherit" onClick={()=>{setMenuItem(<Orders/>)}}>Orders</Button>
              <Button color="inherit" onClick={()=>{setMenuItem(<Users/>)}}>Users</Button>
            </Grid>

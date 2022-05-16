@@ -6,20 +6,18 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {CategoryForm} from './CategoryForm';
 import {Popup} from '../Popup.js';
+import {IMGURL,URL} from '../commons.js';
 
 const columns:GridColDef[]=[
-  {field:'categoryid',headerName:'ID',width:70},
-  {field:'categoryname',headerName:'Category Name',width:150},
-  {field:'imageurl',headerName:'Category Image', width:180,
-  renderCell:(params)=><img src={URL+"/images/" + params.value} alt='' width="50%" height="50%"/>
-},{
-  field:'',headerName:'',width:130,
-  renderCell:(params)=><div><ModeEditIcon/><DeleteForeverIcon/></div>
+  {field:'categoryID',headerName:'ID',width:70,flex:1},
+  {field:'categoryName',headerName:'Category Name',width:150,flex:1},
+  {field:'imageURL',headerName:'Category Image', width:180,flex:1,
+  renderCell:(params)=><img src={IMGURL+ params.value} alt='' width="50%" height="50%"/>
 }
 ];
 
 
-const URL="http://localhost:8080/MobiMart/";
+//const URL="http://localhost:8080/MobiMart/";
 
 export function CategoryTable(){
 
@@ -52,10 +50,10 @@ export function CategoryTable(){
   async function fetchCategories(){
     console.log("Fetching categories");
     try{
-      const res = await fetch(URL+'webapi/category/1', requestOptions);
+      const res = await fetch(URL+'/categories/1', requestOptions);
       const responseData= await res.json();
       console.log(responseData);
-      setRows(responseData);
+      setRows(JSON.parse(responseData.response));
       //this.arrayholder = responseData;
     }catch(exception){
       console.log(exception);
@@ -72,8 +70,7 @@ export function CategoryTable(){
          columns={columns}
          pageSize={5}
          rowsPerPageOptions={[5]}
-         getRowId={(row) => row.categoryid}
-         checkboxSelection
+         getRowId={(row) => row.categoryID}
          components={{
             Toolbar: addButton,
           }}

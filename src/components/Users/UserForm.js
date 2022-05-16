@@ -5,10 +5,10 @@ import {URL} from '../commons.js';
 import {ConfirmDialog} from '../ConfirmDialog';
 
 const initialValues = {
-  username:"",
+  userName:"",
   password:"",
-  fullname:"",
-  userrole:"",
+  fullName:"",
+  userRole:"",
   status:""
 }
 
@@ -36,7 +36,7 @@ export function UserForm(props){
 
 
     useEffect(() => {
-      console.log(user.userid);
+      console.log(user.userID);
       if(user==="0"){
         user=initialValues;
       }
@@ -51,7 +51,7 @@ export function UserForm(props){
 
       setConfirmDialog({...confirmDialog,isOpen:false});
 
-      let targetURL=URL+"webapi/user/";
+      let targetURL=URL+"/saveuser/";
 
       const res = await fetch(targetURL,
         {
@@ -61,11 +61,11 @@ export function UserForm(props){
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-                    "userID":user.userid,
-                    "userName":values.username,
+                    "userID":user.userID,
+                    "userName":values.userName,
                     "password":values.password,
-                    "fullName":values.fullname,
-                    "userRole":values.userrole,
+                    "fullName":values.fullName,
+                    "userRole":values.userRole,
                     "storeID":1,
                     "status":values.status
                   })
@@ -104,8 +104,8 @@ export function UserForm(props){
           variant="outlined"
           required
           onChange={handleInputChange}
-          name="fullname"
-          defaultValue={user.fullname}
+          name="fullName"
+          defaultValue={user.fullName}
           label={"Full Name"} //optional
           style={{width:'100%'}}
         />
@@ -115,8 +115,8 @@ export function UserForm(props){
           variant="outlined"
           required
           onChange={handleInputChange}
-          name="username"
-          defaultValue={user.username}
+          name="userName"
+          defaultValue={user.userName}
           label={"User Name"} //optional
           style={{width:'100%'}}
         />
@@ -139,8 +139,8 @@ export function UserForm(props){
           variant="outlined"
           required
           onChange={handleInputChange}
-          name="userrole"
-          defaultValue={user.userrole}
+          name="userRole"
+          defaultValue={user.userRole}
           label={"User Role"} //optional
           style={{width:'100%'}}
           select
