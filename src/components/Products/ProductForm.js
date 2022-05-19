@@ -158,7 +158,7 @@ export function ProductForm(props){
     <Paper style={{paddingLeft:10,paddingRight:10}}>
     <form id="productForm" className={classes.root}>
     <Grid container spacing={2} >
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           required
           variant="outlined"
@@ -179,7 +179,7 @@ export function ProductForm(props){
           }}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           variant="outlined"
           onChange={handleInputChange}
@@ -193,7 +193,7 @@ export function ProductForm(props){
           }}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           variant="outlined"
           onChange={handleInputChange}
@@ -206,7 +206,7 @@ export function ProductForm(props){
           }}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           variant="outlined"
           onChange={handleInputChange}
@@ -225,7 +225,7 @@ export function ProductForm(props){
           ))}
       </TextField>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           type="number"
           variant="outlined"
@@ -243,7 +243,7 @@ export function ProductForm(props){
           }}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           type="file"
           variant="outlined"
@@ -263,7 +263,7 @@ export function ProductForm(props){
           }}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           type="number"
           variant="outlined"

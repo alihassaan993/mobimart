@@ -7,6 +7,12 @@ import CheckIcon from '@mui/icons-material/Check';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {ConfirmDialog} from '../ConfirmDialog';
 
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+
 
 
 export function OrderDetails(props){
@@ -93,14 +99,19 @@ export function OrderDetails(props){
           <Typography variant="normal">{order.address}</Typography>
         </Grid>
         <Grid item xs={12}>
-            <DataGrid
-              rows={data}
-              columns={columns}
-              pageSize={10}
-              rowsPerPageOptions={[5]}
-              getRowId={(row) => row.orderDetailID}
-              style={{height:250}}
-            />
+        {data.map((product)=>(
+            <Button variant="outlined" 
+              fullWidth style={{height:'80px', marginBottom:10}}>
+            <ListItem key={product.productID}>
+              <ListItemAvatar>
+                  <Avatar>
+                    {product.productName.substring(0,1)}
+                  </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={product.productName} secondary={'Total: ' + product.quantity}/>
+            </ListItem>
+            </Button>
+          ))} 
         </Grid>
         {order.status==='confirm'&&(
         <Grid item xs={12}>

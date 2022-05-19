@@ -1,15 +1,20 @@
 import React,{useEffect,useState} from 'react';
-import {Typography} from '@material-ui/core';
-import { DataGrid, GridColDef} from '@mui/x-data-grid';
+import {Button} from '@material-ui/core';
 import {ToggleButton,ToggleButtonGroup} from '@mui/material';
 import Moment from 'moment';
 import {URL} from '../commons.js';
 import {Popup} from '../Popup';
 import {OrderDetails} from './OrderDetails';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import DoneIcon from '@mui/icons-material/Done';
-import LoopIcon from '@mui/icons-material/Loop';
+
 import {Notification} from '../Notification';
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+
+import LoadingOverlay from 'react-loading-overlay-ts';
 
 export function OrdersList() {
   let lorder = {
@@ -20,6 +25,8 @@ export function OrdersList() {
     address:'',
     fullname:''
   }
+  
+  const [loading,setLoading]=useState(false);
   const [order,setOrder]=useState();
   const [data,setData] = useState([]);
   const [open,setOpen]=useState(false);
@@ -34,57 +41,19 @@ export function OrdersList() {
     fetchOrders(1,newAlignment);
   };
 
-  //const [order,setOrder] = useState(Order);
-  //const order=Order;
-  const columns:GridColDef[]=[
-    {field:'orderID',headerName:'ID', flex: 1,headerClassName: 'super-app-theme--header'},
-    {field:'orderNo',headerName:'Order No', flex: 1,headerClassName: 'super-app-theme--header'},
-    {field:'fullName',headerName:'Customer Name', flex: 1,headerClassName: 'super-app-theme--header'},
-    {field:'address',headerName:'Address', flex: 1,headerClassName: 'super-app-theme--header'},
-    {field:'phoneNo',headerName:'Phone No.', flex: 1,headerClassName: 'super-app-theme--header'},
-    {field:'orderDate',headerName:'Order Date', flex: 1,
-      renderCell:(params)=><Typography variant="normal">{Moment(params.value).format("DD MMM, yyyy")}</Typography>
-    },
-    {field:'status',headerName:'Status', flex: 1,headerClassName: 'super-app-theme--header',
-      renderCell:(params)=>renderStatus(params.value)
-    }
-  ];
-
-  function renderStatus(status){
-    if(status==='Rejected'){
-      return (<div style={{display:"flex",alignItems:"center",flex:1}}><HighlightOffIcon fontSize="small" style={{ color: 'red' }}/><Typography variant="normal" style={{color:'red'}}>{status}</Typography></div>)
-    }else if (status==='Accepted') {
-      return (<div style={{display:"flex",alignItems:"center",flex:1}}><DoneIcon  fontSize="small" style={{ color: 'blue' }}/><Typography variant="normal" style={{color:'blue'}}>{status}</Typography></div>)
-    }else{
-      return (<div style={{display:"flex",alignItems:"center",flex:1}}><LoopIcon fontSize="small" style={{ color: 'green' }}/><Typography variant="normal" style={{color:'green'}}>{status}</Typography></div>)
-    }
-  }
-
   useEffect(() => {
     console.log("FETCHING ORDERS");
       fetchOrders(1,'today');
   }, []);
 
-  function currentlySelected(params: GridCellParams) {
-
-
-      //const order = Order
-      lorder.orderID = Number(params.row.orderID);
-      lorder.orderDate = params.row.orderDate.toString();
-      lorder.orderNo = params.row.orderNo.toString();
-      lorder.status = params.row.status.toString();
-      lorder.phoneNo = params.row.phoneNo.toString();
-      lorder.address = params.row.address.toString();
-
-      setOrder(lorder);
-      setOpen(true);
-    }
 
   async function fetchOrders(storeID,duration){
     console.log("Fetching orders");
     try{
+      setLoading(true);
       const res = await fetch(URL+'/order/bystoreid?storeID='+storeID+'&duration='+duration);
       const responseData= await res.json();
+      setLoading(false);
       if(responseData.status!=="Fail"){
         let responseStr=JSON.parse(responseData.response);
         setData(responseStr);
@@ -95,9 +64,14 @@ export function OrdersList() {
     }
 
   }
-
+  let statusColor="green";
   return(
     <>
+    <LoadingOverlay
+      active={loading}
+      spinner
+      text='Loading Orders...'
+    >  
     <ToggleButtonGroup
       color="primary"
       value={alignment}
@@ -116,24 +90,24 @@ export function OrdersList() {
           }
         }}
         >
+          
+          {data.map((order)=>(
+            <Button variant="outlined" 
+              onClick={()=>{setOrder(order); setOpen(true);}}
+              fullWidth style={{height:'80px', marginBottom:10}}>
+            <ListItem key={order}>
+              <ListItemAvatar>
+                  <Avatar sx={{bgcolor:order.status==='Rejected'?'red':order.status==='confirm'?'orange':'green'}}>
+                    {order.status.substring(0,1)}
+                  </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={order.orderNo} secondary={Moment(order.orderDate).format("DD MMM, yyyy hh:mm")}/>
+            </ListItem>
+            </Button>
+          ))}  
 
-        <DataGrid
-          rows={data}
-          columns={columns}
-          pageSize={20}
-          autoHeight
-          rowsPerPageOptions={[20]}
-          getRowId={(row) => row.orderID}
-          onCellDoubleClick={currentlySelected}
-         sx={{
-           boxShadow: 2,
-           borderColor: 'primary.dark',
-           '& .MuiDataGrid-cell:hover': {
-             color: 'secondary',
-           },
-          }}
-        />
       </div>
+      </LoadingOverlay>
       <Popup
        openPopup={open}
        setOpenPopup={setOpen}

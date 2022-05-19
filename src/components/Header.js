@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import {Grid,Badge} from '@material-ui/core';
 import {myStyle} from '../styles.js';
 import {useState} from 'react';
@@ -27,6 +28,7 @@ export function Header(props) {
   const {setMenuItem,setLoginFlag}=props;
 
   const [setAnchorElNav] = useState(null);
+  const [anchor, setAnchor] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -37,38 +39,64 @@ export function Header(props) {
      setAnchorElUser(event.currentTarget);
    };
 
+  const handleOpenProductMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchor(event.currentTarget);
+  };
+
    const handleCloseNavMenu = () => {
      setAnchorElNav(null);
    };
 
+   
+
    const handleCloseUserMenu = () => {
-     setLoginFlag(false);
      setAnchorElUser(null);
+     setAnchor(null);
    };
   return (
-      <AppBar position="static" className={classes.root}>
-        <Toolbar>
-          <Grid container>
-           <Grid item>
-             <Button color="inherit" onClick={()=>{setMenuItem(<Categories/>)}}>Category</Button>
-             <Button color="inherit" onClick={()=>{setMenuItem(<Products/>)}}>Products</Button>
-             <Button color="inherit" onClick={()=>{setMenuItem(<Orders/>)}}>Orders</Button>
-             <Button color="inherit" onClick={()=>{setMenuItem(<Users/>)}}>Users</Button>
-           </Grid>
-           <Grid item sm>
-           </Grid>
-           <Grid item>
+    <Box sx={{ flexGrow: 1 }}>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+        >
+          <MenuIcon onClick={handleOpenProductMenu}/>
+          <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchor}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchor)}
+              onClose={handleCloseUserMenu}
+            >
+                <MenuItem onClick={()=>{setMenuItem(<Categories/>);setAnchor(null);}}>Category</MenuItem>
+                <MenuItem onClick={()=>{setMenuItem(<Products/>);setAnchor(null);}}>Product</MenuItem>
+                <MenuItem onClick={()=>{setMenuItem(<Orders/>);setAnchor(null);}}>Orders</MenuItem>
+                <MenuItem onClick={()=>{setMenuItem(<Users/>);setAnchor(null);}}>Users</MenuItem>
 
-            <Box sx={{ flexGrow: 0 }}>
-            <Badge badgeContent={4} color="secondary">
-             <CircleNotificationsIcon color="white" fontSize="large" />
-            </Badge>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <FaceIcon fontSize="large" style={{ color: 'white' }}/>
-              </IconButton>
-            </Tooltip>
-            <Menu
+            </Menu>
+        </IconButton>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          MobiMart BackOffice
+        </Typography>
+        <Tooltip title="Open settings">
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <FaceIcon fontSize="large" style={{ color: 'white' }}/>
+          </IconButton>
+        </Tooltip>
+        <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
@@ -90,10 +118,9 @@ export function Header(props) {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
-           </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
+      </Toolbar>
+    </AppBar>
+  </Box>
+
   );
 }

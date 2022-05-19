@@ -9,7 +9,7 @@ import {Product} from './Product.js';
 import {Popup} from '../Popup';
 import {URL,IMGURL} from '../commons.js';
 import LoadingOverlay from 'react-loading-overlay-ts';
-
+import {Carousel}  from 'react-responsive-carousel';
 export function ProductsList(){
 
   const [data,setData]=useState([]);
@@ -56,7 +56,6 @@ export function ProductsList(){
       console.log(exception);
       alert("Unable to communicate to server. Please check your internet connection!!!");
     }
-
   }
 
   async function fetchCategories(){
@@ -66,52 +65,33 @@ export function ProductsList(){
       setLoading(true);
       const res = await fetch(URL+'/categories/1');
       const responseData= await res.json();
-      console.log(responseData.status);
       setCategories(JSON.parse(responseData.response));
       setLoading(false);
-      //this.arrayholder = responseData;
+      setCategory(JSON.parse(responseData.response)[0]);
     }catch(exception){
       console.log(exception);
       alert("Unable to communicate to server. Please check your internet connection!!!");
     }
-
   }
 
   return(
     <>
+        <LoadingOverlay
+        active={loading}
+        spinner
+        text='Loading Products...'
+      >   
     <div>
     <Paper color="primary">
-    <Typography variant="h6">
-    &nbsp;Categories
-    </Typography>
-    <TableContainer>
-      <Table sx={{ minWidth: 650 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell >
-            <ToggleButtonGroup
-              color="primary"
-              value={alignment}
-              exclusive
-              onChange={handleChange}
-            >
-              {categories.map((category,index)=>(
-                  <ToggleButton value={category.categoryID}>
-                    <Category
-                      imageURL={IMGURL+category.imageURL}
-                      categoryName={category.categoryName}
-                      category={category}
-                      setID={setCategory}
-                    >
-                    </Category>
-                </ToggleButton>
-              ))}
-              </ToggleButtonGroup>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-      </Table>
-    </TableContainer>
+      <Carousel showArrows={true} showThumbs={false} centerMode onChange={(index,item)=>fetchProducts(item.key.substring(2))}>
+            {categories.map((category)=>(
+              <div key={category.categoryID} style={{width:"100%",height:"200px"}}>
+              <img src={IMGURL+category.imageURL}/>
+              <p className="legend">{category.categoryName}</p>
+              </div>
+            ))}
+
+      </Carousel>
     </Paper>
     </div>
 
@@ -123,11 +103,7 @@ export function ProductsList(){
     </Paper>
     </div>        
     <div>
-    <LoadingOverlay
-        active={loading}
-        spinner
-        text='Loading Products...'
-      >    
+ 
       
     <Paper style={{marginTop:10,paddingLeft:10,paddingRight:10}} elevation={3}>
     <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -161,7 +137,6 @@ export function ProductsList(){
  
     </Grid>
     </Paper>
-    </LoadingOverlay>
     </div>
       <Popup
        openPopup={open}
@@ -173,6 +148,8 @@ export function ProductsList(){
        setOpen={setOpen}
        />
       </Popup>
+
+    </LoadingOverlay>
     </>
   );
 

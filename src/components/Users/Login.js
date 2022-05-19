@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 import {User} from './User.js';
+import {Categories} from '../Categories/Categories.js';
+import {Orders} from '../Orders/Orders.js';
 import {Products} from '../Products/Products.js';
 import {Header} from '../Header.js';
 import {myStyle} from '../../styles.js';
@@ -33,7 +35,7 @@ export function Login(){
   const [loginFlag,setLoginFlag] = useState(false);
   const [notify,setNotify]=useState({isOpen:false,message:'',type:''});
   const classes=myStyle();
-  const [menuItem,setMenuItem]=useState(<Products/>);
+  const [menuItem,setMenuItem]=useState(<Orders/>);
 
     const  login = async(event) => {
       event.preventDefault();

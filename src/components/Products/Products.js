@@ -10,7 +10,7 @@ export function Products() {
     <div>
     <PageHeader
       title="Product"
-      subTitle="Please select Category, Products of Category will than list"
+      subTitle="Please choose Category."
       icon={<InventoryIcon />}
     />
     <ProductsList/>

@@ -2,12 +2,22 @@ import * as React from 'react';
 import { DataGrid, GridColDef} from '@mui/x-data-grid';
 import {useEffect,useState} from 'react';
 import {Button} from '@material-ui/core';
+import AddIcon from '@mui/icons-material/Add';
 
 import {Notification} from '../Notification';
 
 import {Popup} from '../Popup.js';
 import {UserForm} from './UserForm';
 import {URL} from '../commons.js';
+
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import LoadingOverlay from 'react-loading-overlay-ts';
+
 
 const columns:GridColDef[]=[
   {field:'userID',headerName:'ID',flex:1},
@@ -30,6 +40,7 @@ export function UserList(){
     status:""
   }
 
+  const [loading,setLoading]=useState(false);
   const [rows,setRows] = useState([]);
   const [open,setOpen] = useState(false);
   const handleOpen = () => {setUser("");setOpen(true);}
@@ -62,8 +73,10 @@ export function UserList(){
   async function fetchUsers(storeID){
     console.log("Fetching Users");
     try{
+      setLoading(true);
       const res = await fetch(URL+'/allusers/'+ storeID, requestOptions);
       const responseData= await res.json();
+      setLoading(false);
       //console.log(responseData);
       if(responseData.status!=="Fail"){
         let responseStr=JSON.parse(responseData.response);
@@ -80,18 +93,6 @@ export function UserList(){
 
   }
 
-  function editUser(params: GridCellParams){
-    luser.userID = Number(params.row.userID);
-    luser.userName = params.row.userName.toString();
-    luser.fullName = params.row.fullName.toString();
-    luser.userRole = params.row.userRole.toString();
-    luser.status = params.row.status.toString();
-    luser.password=params.row.password.toString();
-
-    setUser(luser);
-    setOpen(true);
-  }
-
  return(
    <>
      <div style={{ height: 400, width: '100%'
@@ -100,21 +101,35 @@ export function UserList(){
          }
        }}
        >
-       <DataGrid
-         autoHeight
-         rows={rows}
-         columns={columns}
-         pageSize={5}
-         rowsPerPageOptions={[5]}
-         getRowId={(row) => row.userID}
-         onCellClick={editUser}
-         components={{
-            Toolbar: addButton,
-          }}
-          columnVisibilityModel={{
-          password: false,
-        }}
-       />
+      <LoadingOverlay
+        active={loading}
+        spinner
+        text='Loading Users...'
+      >  
+      <ListItem onClick={handleOpen} >
+        <ListItemAvatar>
+          <Avatar>
+            <AddIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary="Add User" />
+      </ListItem> 
+      {rows.map((user)=>(
+        <Button variant="outlined" 
+          fullWidth style={{height:'80px', marginBottom:10}}
+          onClick={()=>{setUser(user);setOpen(true);}}
+          >
+        <ListItem key={user.userID}>
+          <ListItemAvatar>
+              <Avatar sx={{bgcolor:user.status==='inactive'?'red':'green'}}>
+                    {user.userName.substring(0,1)}
+              </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={user.fullName} secondary={user.userRole}/>
+        </ListItem>
+        </Button>
+      ))} 
+    </LoadingOverlay>
      <Popup
       openPopup={open}
       setOpenPopup={setOpen}

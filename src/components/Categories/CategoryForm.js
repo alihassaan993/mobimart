@@ -43,17 +43,7 @@ export function CategoryForm(){
     <Paper style={{paddingLeft:10,paddingRight:10}}>
     <form className={classes.root}>
     <Grid container spacing={2} >
-      <Grid item xs={6}>
-        <TextField
-          variant="outlined"
-          onChange={handleInputChange}
-          name="storeID"
-          value={values.storeID}
-          label={"Store ID"} //optional
-          style={{width:'100%'}}
-        />
-      </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={12}>
         <TextField
           variant="outlined"
           onChange={handleInputChange}
@@ -63,12 +53,11 @@ export function CategoryForm(){
           style={{width:'100%'}}
         />
       </Grid>
-      <Grid item xs={6}>
-        <TextField
+      <Grid item xs={12} md={12}>
+      <TextField
+          type="file"
           variant="outlined"
-          onChange={handleInputChange}
           name="imageURL"
-          value={values.imageURL}
           label={"Category Image"} //optional
           style={{width:'100%'}}
         />

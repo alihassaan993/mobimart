@@ -1,27 +1,27 @@
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import {useEffect,useState} from 'react';
 import {Paper,Button} from '@material-ui/core';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 import {CategoryForm} from './CategoryForm';
 import {Popup} from '../Popup.js';
 import {IMGURL,URL} from '../commons.js';
-
-const columns:GridColDef[]=[
-  {field:'categoryID',headerName:'ID',width:70,flex:1},
-  {field:'categoryName',headerName:'Category Name',width:150,flex:1},
-  {field:'imageURL',headerName:'Category Image', width:180,flex:1,
-  renderCell:(params)=><img src={IMGURL+ params.value} alt='' width="50%" height="50%"/>
-}
-];
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import AddIcon from '@mui/icons-material/Add';
+import LoadingOverlay from 'react-loading-overlay-ts';
 
 
 //const URL="http://localhost:8080/MobiMart/";
 
 export function CategoryTable(){
 
-  const [rows,setRows] = useState();
+  
+  const [loading,setLoading]=useState(false);
+  const [rows,setRows] = useState([]);
   const [open,setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
 
@@ -50,8 +50,10 @@ export function CategoryTable(){
   async function fetchCategories(){
     console.log("Fetching categories");
     try{
+      setLoading(true);
       const res = await fetch(URL+'/categories/1', requestOptions);
       const responseData= await res.json();
+      setLoading(false);
       console.log(responseData);
       setRows(JSON.parse(responseData.response));
       //this.arrayholder = responseData;
@@ -64,18 +66,38 @@ export function CategoryTable(){
 
  return(
    <Paper style={{padding:20}}>
-     <div style={{ height: 300, width: '100%' }}>
-       <DataGrid
-         rows={rows}
-         columns={columns}
-         pageSize={5}
-         rowsPerPageOptions={[5]}
-         getRowId={(row) => row.categoryID}
-         components={{
-            Toolbar: addButton,
-          }}
-       />
+    <LoadingOverlay
+      active={loading}
+      spinner
+      text='Loading Categories...'
+    > 
+     <div style={{ height: '100%', width: '100%' }}>
+      <List>
+          <ListItem onClick={handleOpen} >
+            <ListItemAvatar>
+              <Avatar>
+                <AddIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Add Category" />
+          </ListItem>  
+          {rows.map((item)=>(
+            <Button variant="outlined" fullWidth style={{height:'80px', marginBottom:10}}>
+            <ListItem>
+              <ListItemAvatar>
+                  <Avatar>
+                    <img src={IMGURL+item.imageURL} style={{width:50,height:'80%'}}/>
+                  </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={item.categoryName} />
+            </ListItem>
+            </Button>
+          ))}    
+
+  
+      </List>
      </div>
+     </LoadingOverlay>
      <Popup
       openPopup={open}
       setOpenPopup={setOpen}

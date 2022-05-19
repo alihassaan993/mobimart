@@ -44,14 +44,14 @@ export function PageHeader(props){
           </Typography>
         </div>
       </div>
-      <div style={{marginTop:15,paddingRight:'10px'}}>
+      {/* <div style={{marginTop:15,paddingRight:'10px'}}>
         <Typography variant="h6" component="div">
           Welcome {User.getName()}
         </Typography>
         <Typography variant="subTitle2" component="div">
           Date:{Moment(Date.now()).format('DD MMM yyyy')}
         </Typography>
-      </div>
+      </div> */}
     </Paper>
   );
 
