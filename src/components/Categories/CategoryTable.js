@@ -35,10 +35,6 @@ export function CategoryTable(){
   )
   }
 
-  const requestOptions = {
-        method: 'GET',
-        headers: { 'Access-Control-Allow-Origin': '*' }
-    };
 
   useEffect(() => {
     console.log(
@@ -51,7 +47,7 @@ export function CategoryTable(){
     console.log("Fetching categories");
     try{
       setLoading(true);
-      const res = await fetch(URL+'/categories/1', requestOptions);
+      const res = await fetch(URL+'/categories/1');
       const responseData= await res.json();
       setLoading(false);
       console.log(responseData);

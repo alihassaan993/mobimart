@@ -19,27 +19,11 @@ import Avatar from '@mui/material/Avatar';
 import LoadingOverlay from 'react-loading-overlay-ts';
 
 
-const columns:GridColDef[]=[
-  {field:'userID',headerName:'ID',flex:1},
-  {field:'fullName',headerName:'Full Name',flex:1},
-  {field:'userName',headerName:'User Name',flex:1},
-  {field:'userRole',headerName:'Role',flex:1},
-  {field:'status',headerName:'Status',flex:1},
-  {field:'password',headerName:'password',flex:1}
-];
-
 
 
 export function UserList(){
 
-  let luser={
-    userID:0,
-    userName:"",
-    fullName:"",
-    userRole:"",
-    status:""
-  }
-
+ 
   const [loading,setLoading]=useState(false);
   const [rows,setRows] = useState([]);
   const [open,setOpen] = useState(false);
@@ -48,20 +32,6 @@ export function UserList(){
   const [notify,setNotify]=useState({isOpen:false,message:'',type:''});
 
 
-  function addButton ()
-  {
-    return(
-    <div align="right">
-    <Button style={{padding:10,margin:10,justifyContent:"right"}}
-    variant="contained" color="primary" onClick={handleOpen}>+ Add User</Button>
-    </div>
-  )
-  }
-
-  const requestOptions = {
-        method: 'GET',
-        headers: { 'Access-Control-Allow-Origin': '*' }
-    };
 
   useEffect(() => {
     console.log(
@@ -74,7 +44,7 @@ export function UserList(){
     console.log("Fetching Users");
     try{
       setLoading(true);
-      const res = await fetch(URL+'/allusers/'+ storeID, requestOptions);
+      const res = await fetch(URL+'/allusers/'+ storeID);
       const responseData= await res.json();
       setLoading(false);
       //console.log(responseData);
