@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React,{useEffect} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,25 +12,44 @@ import {useState} from 'react';
 import {Products} from './Products/Products.js'
 import {Orders} from './Orders/Orders.js'
 import {Categories} from './Categories/Categories.js'
+import {WSURL} from './commons';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+
 
 import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import FaceIcon from '@mui/icons-material/Face';
-
-import {Users} from './Users/Users';
+import {Users} from './Users/Users.js';
+import {User} from './Users/User.js';
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const settings = ['Logout'];
 
+
 export function Header(props) {
   const classes=myStyle();
-  const {setMenuItem,setLoginFlag}=props;
+  const {setMenuItem,setLoginFlag,user}=props;
 
   const [setAnchorElNav] = useState(null);
   const [anchor, setAnchor] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-
+  ////////////////// Websocket ////////////////////////
+  const [isWSConnected,setIsWSConnected] = useState(false);
+  
+  if(!isWSConnected){
+    const client = new W3CWebSocket(WSURL);
+    setIsWSConnected(true);
+    client.onopen = () => {
+      console.log('connected');
+      client.send(JSON.stringify({"storeID":User.getStoreID(),"userID":User.getUserID()}));
+    };
+    client.onmessage = function(e){
+      var server_message = e.data;
+      alert("Received Order");
+    }
+  }
+  /////////////////////////////////////////////////////
    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
      //setLoginFlag(false);
      setAnchorElNav(event.currentTarget);

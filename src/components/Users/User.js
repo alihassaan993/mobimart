@@ -1,6 +1,7 @@
 export var User = (function() {
   var full_name = "";
   var userID=0;
+  var storeID=0;
 
   var getName = function() {
     return full_name;    // Or pull this from cookie/localStorage
@@ -10,6 +11,14 @@ export var User = (function() {
     full_name = name;
     // Also set this in cookie/localStorage
   };
+
+  var getStoreID=function(){
+    return storeID;
+  }
+
+  var setStoreID=function(_storeID){
+    storeID=_storeID;
+  }
 
   var getUserID=function(){
     return userID;
@@ -23,7 +32,9 @@ export var User = (function() {
     getName: getName,
     setName: setName,
     getUserID:getUserID,
-    setUserID:setUserID
+    setUserID:setUserID,
+    getStoreID:getStoreID,
+    setStoreID:setStoreID
   }
 
 })();

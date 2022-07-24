@@ -30,6 +30,7 @@ export function ProductsList(){
       console.log("FETCHING Categories");
       fetchCategories();
     if(category!==0){
+      setCategory(category);
       fetchProducts(category.categoryID);
     }
 
@@ -38,6 +39,7 @@ export function ProductsList(){
   useEffect(() => {
     console.log("FETCHING PRODUCTS");
     if(category!==0){
+      setCategory(category);
       fetchProducts(category.categoryID);
     }
   }, [category]);

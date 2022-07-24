@@ -59,7 +59,9 @@ export function Login(){
         console.log(responseData);
         if(responseData.status!=="Fail"){
           let responseStr = JSON.parse(responseData.response)
-          User.setName(responseStr.fullName);
+          User.setName(responseStr[0].fullName);
+          User.setUserID(responseStr[0].userID);
+          User.setStoreID(responseStr[0].storeID);
           setLoginFlag(true);
         }else{
          

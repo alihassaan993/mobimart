@@ -7,8 +7,7 @@ import DiscountIcon from '@mui/icons-material/Discount';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MenuItem from '@mui/material/MenuItem';
 
-import { Upload } from "@aws-sdk/lib-storage";
-import { S3Client } from "@aws-sdk/client-s3";
+import {FileUpload} from '../FileUpload';
 
 import {URL,IMGURL} from '../commons.js';
 
@@ -51,24 +50,40 @@ export function ProductForm(props){
   
 
         let targetURL=URL+'/product/';
-        const myFile = document.querySelector("input[type=file]").files[0];
-        
-        await upload(myFile);
-
+        let myFile = null;
+        let fileName="";
         const data = new FormData();
-        //data.append("productImage", myFile);
+
         if(product!==""){
           data.append("productID",product.productID);
+          fileName=product.imageurl;
         }else{
           data.append("productID",0);
         }
+
+        if(document.querySelector("input[type=file]").files.lenght!=0){
+          myFile=document.querySelector("input[type=file]").files[0];
+        }
+          
+        
+        //console.log(myFile);
+
+        if(myFile!=null){
+          await FileUpload(myFile);
+          fileName=myFile.name;  
+        }
+          
+
+
+        //data.append("productImage", myFile);
+
 
 
 
         data.append("productName", values.productName);data.append("categoryID", categoryID);
         data.append("productCode", values.productCode);
 
-        data.append("imageURL", myFile.name);
+        data.append("imageURL", fileName);
         data.append("productUnit", values.productUnit);data.append("discount", values.discount);
         data.append("unitPrice", values.unitPrice);data.append("productDesc", values.productDesc);
         data.append("storeID",1);
@@ -91,38 +106,13 @@ export function ProductForm(props){
         
 
       }catch(exception){
+        console.log(exception);
         alert("Unable to save product at this time. Please try again later");
       }
 
     };
 
- function upload(myFile){
-
-    
-      
-      const target = { Bucket:process.env.REACT_APP_BUCKET_NAME, Key:myFile.name, Body:myFile };
-      const creds = {accessKeyId:process.env.REACT_APP_ACCESS_ID,secretAccessKey: process.env.REACT_APP_ACCESS_KEY};
-      try {
-
-        const parallelUploads3 = new Upload({
-          client: new S3Client({region:process.env.REACT_APP_REGION,credentials:creds}),
-          leavePartsOnError: false, // optional manually handle dropped parts
-          params: target,
-        });
-    
-        parallelUploads3.on("httpUploadProgress", (progress) => {
-          console.log(progress);
-        });
-    
-        parallelUploads3.done();
-        console.log("File Uploaded Successfully " );
-
-        return IMGURL + myFile.name;
-
-      } catch (e) {
-        console.log(e);
-      }
-  }    
+   
 
   const handleReset = () => {
     document.getElementById("productForm").reset();
@@ -156,14 +146,14 @@ export function ProductForm(props){
 
   return(
     <Paper style={{paddingLeft:10,paddingRight:10}}>
-    <form id="productForm" className={classes.root}>
+    <form className={classes.root}  onSubmit={handleSubmit}>
     <Grid container spacing={2} >
       <Grid item xs={12} md={6}>
         <TextField
           required
           variant="outlined"
           onChange={handleInputChange}
-          name="productname"
+          name="productName"
           defaultValue={product.productName}
           label={"Product Name"} //optional
           style={{width:'100%'}}
@@ -183,7 +173,7 @@ export function ProductForm(props){
         <TextField
           variant="outlined"
           onChange={handleInputChange}
-          name="productdesc"
+          name="productDesc"
           defaultValue={product.productDesc}
           label={"Product Description"} //optional
           style={{width:'100%'}}
@@ -197,7 +187,7 @@ export function ProductForm(props){
         <TextField
           variant="outlined"
           onChange={handleInputChange}
-          name="productcode"
+          name="productCode"
           defaultValue={product.productCode}
           label={"Product Code"} //optional
           style={{width:'100%'}}
@@ -210,7 +200,7 @@ export function ProductForm(props){
         <TextField
           variant="outlined"
           onChange={handleInputChange}
-          name="productunit"
+          name="productUnit"
           defaultValue={product.productUnit}
           label={"Product Unit"} //optional
           style={{width:'100%'}}
@@ -230,7 +220,7 @@ export function ProductForm(props){
           type="number"
           variant="outlined"
           onChange={handleInputChange}
-          name="unitprice"
+          name="unitPrice"
           defaultValue={product.unitPrice}
           label={"Unit Price"} //optional
           style={{width:'100%'}}
@@ -283,7 +273,7 @@ export function ProductForm(props){
       </Grid>
       <Grid item xs={12}>
         <div align="center">
-          <Button color="primary" style={{margin:10}} onClick={handleSubmit} variant="contained">Submit</Button>
+          <Button color="primary" style={{margin:10}} type="submit" variant="contained">Submit</Button>
           <Button onClick={handleReset} variant="contained">Reset</Button>
         </div>
       </Grid>
