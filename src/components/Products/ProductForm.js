@@ -5,9 +5,10 @@ import DnsIcon from '@mui/icons-material/Dns';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import DiscountIcon from '@mui/icons-material/Discount';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import MenuItem from '@mui/material/MenuItem';
-
+import MenuItem from '@mui/material/MenuItem';       
 import {FileUpload} from '../FileUpload';
+import AWS from 'aws-sdk';
+import { S3 } from 'aws-sdk';
 
 import {URL,IMGURL} from '../commons.js';
 
@@ -36,6 +37,15 @@ const useStyles = makeStyles(theme=>({
      }
    }
 }))
+ 
+const s3 = new S3({
+  //region:process.env.REACT_APP_REGION,
+  region:'ap-south-1',
+  accessKeyId:'AKIA6QZ27NOPLTVMQ5FU',
+  secretAccessKey:'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'
+  //accessKeyId:process.env.REACT_APP_ACCESS_ID,
+  //secretAccessKey: process.env.REACT_APP_ACCESS_KEY
+});
 
 export function ProductForm(props){
 
@@ -44,8 +54,9 @@ export function ProductForm(props){
   const classes = useStyles();
   //let imageChangeFlag=false;
 
-  const  handleSubmit = async() =>
+  const  handleSubmit = async(event) =>
     {
+      event.preventDefault();
       try{
   
 
@@ -67,18 +78,34 @@ export function ProductForm(props){
           
         
         //console.log(myFile);
-
         if(myFile!=null){
-          await FileUpload(myFile);
+          console.log("File is not null + " + myFile);
+          try{
+            const formData = new FormData();
+            const base64 = await convertFileToBase64(myFile);
+            formData.append('file', myFile);
+      
+            const options = {
+              method: 'POST',
+              body: formData,
+              headers : {
+                'x-file-name': myFile.name
+              }
+            };
+            const res = await fetch(URL+'/utilities/upload',options);
+
+            //alert(res.toString());
+              
+          }catch(exception){
+            alert(exception);
+          }
+
+          alert("File uploaded successfully!!");
+
           fileName=myFile.name;  
+       
         }
           
-
-
-        //data.append("productImage", myFile);
-
-
-
 
         data.append("productName", values.productName);data.append("categoryID", categoryID);
         data.append("productCode", values.productCode);
@@ -90,29 +117,37 @@ export function ProductForm(props){
 
         console.log("Data " + JSON.stringify(Object.fromEntries(data.entries())));
 
-        const res = await fetch(targetURL, {
-            method: 'POST',
-            headers:
-            {
-              'Content-Type':'application/json'
-            },
-            body: JSON.stringify(Object.fromEntries(data.entries()))
+        // const res = await fetch(URL+'/product/', {
+        //     method: 'POST',
+        //     headers:
+        //     {
+        //       'Content-Type':'application/json'
+        //     },
+        //     body: JSON.stringify(Object.fromEntries(data.entries()))
 
-        });
-        const responseData= await res;
+        // });
+        // const responseData= await res;
 
-        refresh(categoryID);
-        setOpen(false);
+        //refresh(categoryID);
+        //setOpen(false);
         
 
       }catch(exception){
         console.log(exception);
-        alert("Unable to save product at this time. Please try again later");
+        //alert("Problem while saving product");
+        alert("Unable to save product at this time. Please try again later " + exception);
       }
 
     };
 
-   
+    const convertFileToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = (error) => reject(error);
+      });
+    };
 
   const handleReset = () => {
     document.getElementById("productForm").reset();

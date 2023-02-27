@@ -56,7 +56,7 @@ export function ProductsList(){
       setData(JSON.parse(responseData.response));
     }catch(exception){
       console.log(exception);
-      alert("Unable to communicate to server. Please check your internet connection!!!");
+      alert("Unable to communicate to server. Please check your internet connection!!! " + exception);
     }
   }
 
