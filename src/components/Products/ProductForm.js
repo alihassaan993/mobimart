@@ -38,14 +38,6 @@ const useStyles = makeStyles(theme=>({
    }
 }))
  
-const s3 = new S3({
-  //region:process.env.REACT_APP_REGION,
-  region:'ap-south-1',
-  accessKeyId:'AKIA6QZ27NOPLTVMQ5FU',
-  secretAccessKey:'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'
-  //accessKeyId:process.env.REACT_APP_ACCESS_ID,
-  //secretAccessKey: process.env.REACT_APP_ACCESS_KEY
-});
 
 export function ProductForm(props){
 
@@ -87,7 +79,8 @@ export function ProductForm(props){
       
             const options = {
               method: 'POST',
-              body: formData,
+              body: formData
+              ,
               headers : {
                 'x-file-name': myFile.name
               }
