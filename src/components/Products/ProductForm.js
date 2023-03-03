@@ -49,6 +49,7 @@ export function ProductForm(props){
   const  handleSubmit = async(event) =>
     {
       event.preventDefault();
+      let productImagePath="";
       try{
   
 
@@ -74,8 +75,10 @@ export function ProductForm(props){
           console.log("File is not null + " + myFile);
           try{
             const formData = new FormData();
+
+            const reader = new FileReader();
             const base64 = await convertFileToBase64(myFile);
-            formData.append('file', myFile);
+            formData.append('file', base64);
       
             const options = {
               method: 'POST',
@@ -87,13 +90,21 @@ export function ProductForm(props){
             };
             const res = await fetch(URL+'/utilities/upload',options);
 
+            const responseData= await res.json();
+            
+            if(responseData.status!=="Fail"){
+              let responseStr = JSON.parse(responseData.response);
+              console.log(responseStr);
+              productImagePath=myFile.name;
+            }else{
+              alert("Not able to upload the product image");
+            }
+
             //alert(res.toString());
               
           }catch(exception){
             alert(exception);
           }
-
-          alert("File uploaded successfully!!");
 
           fileName=myFile.name;  
        
@@ -103,27 +114,27 @@ export function ProductForm(props){
         data.append("productName", values.productName);data.append("categoryID", categoryID);
         data.append("productCode", values.productCode);
 
-        data.append("imageURL", fileName);
+        data.append("imageURL", productImagePath);
         data.append("productUnit", values.productUnit);data.append("discount", values.discount);
         data.append("unitPrice", values.unitPrice);data.append("productDesc", values.productDesc);
         data.append("storeID",1);
 
         console.log("Data " + JSON.stringify(Object.fromEntries(data.entries())));
 
-        // const res = await fetch(URL+'/product/', {
-        //     method: 'POST',
-        //     headers:
-        //     {
-        //       'Content-Type':'application/json'
-        //     },
-        //     body: JSON.stringify(Object.fromEntries(data.entries()))
+        const res = await fetch(URL+'/product/', {
+            method: 'POST',
+            headers:
+            {
+              'Content-Type':'application/json'
+            },
+            body: JSON.stringify(Object.fromEntries(data.entries()))
 
-        // });
-        // const responseData= await res;
+        });
+        const responseData= await res;
 
-        //refresh(categoryID);
-        //setOpen(false);
-        
+        refresh(categoryID);
+        setOpen(false);
+        alert("Product has be updated successfully!!!");
 
       }catch(exception){
         console.log(exception);
