@@ -6,9 +6,7 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import DiscountIcon from '@mui/icons-material/Discount';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MenuItem from '@mui/material/MenuItem';       
-import {FileUpload} from '../FileUpload';
-import AWS from 'aws-sdk';
-import { S3 } from 'aws-sdk';
+
 
 import {URL,IMGURL} from '../commons.js';
 
