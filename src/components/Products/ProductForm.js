@@ -76,15 +76,11 @@ export function ProductForm(props){
 
             const reader = new FileReader();
             const base64 = await convertFileToBase64(myFile);
-            formData.append('file', base64);
+            formData.append('file', base64 + "filename:" + myFile.name);
       
             const options = {
               method: 'POST',
               body: formData
-              ,
-              headers : {
-                'x-file-name': myFile.name
-              }
             };
             const res = await fetch(URL+'/utilities/upload',options);
 
