@@ -91,6 +91,8 @@ export function ProductForm(props){
               console.log(responseStr);
               productImagePath=myFile.name;
             }else{
+              let responseStr = JSON.parse(responseData.response);
+              console.log(responseStr);
               alert("Not able to upload the product image");
             }
 
