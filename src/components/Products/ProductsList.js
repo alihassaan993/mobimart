@@ -19,13 +19,6 @@ export function ProductsList(){
   const [open,setOpen]=useState(false);
   const [loading,setLoading]=useState(false);
 
-  const [alignment, setAlignment] = React.useState(0);
-  const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newAlignment: string,
-  ) => {
-    setAlignment(newAlignment);
-  };
   useEffect(() => {
       console.log("FETCHING Categories");
       fetchCategories();

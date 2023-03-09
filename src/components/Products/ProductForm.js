@@ -104,6 +104,8 @@ export function ProductForm(props){
 
           fileName=myFile.name;  
        
+        }else{
+          productImagePath=product.imageurl;
         }
           
 
